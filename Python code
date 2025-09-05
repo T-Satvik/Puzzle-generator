@@ -1,0 +1,149 @@
+import random
+
+def crossword_generator_easy():
+
+  crossword = [[],[],[],[],[],[],[],[],[],[]]
+  global characters
+  global words
+
+  # for loop to generate 10*10 grid type game
+  for i in range(10):
+      word = ''
+      # main idea/reason how this works is through the use of random number generator.
+      placement = random.randint(0,10)
+      num = len(words[i])
+
+      # if the value generated is less than or equal to 4, characters are added on the lefthand side or insense before joining the word
+      if placement <= 4:
+         # the loop iterates 10-num for creating a 10 letter word to fit the crossword grid, same for the below
+         for j in range(10-num):
+             word += characters[j]
+         word += words[i]
+
+      # if the value generated is less than or equal to 8, characters are placed on the righthand side or word is joined first befor the other characters.
+      elif placement <= 8:
+         word += words[i]
+         for n in range(10-num):
+             word += characters[n]
+
+      # otherwise two characters are placed first and then remaining are placed after the word
+      else:
+         for q in range(0,(10-num)):
+             word += characters[q]
+             if q == 2:
+                word += words[i]
+
+
+      # using list function we can break down the word to indivisual characters to increase the difficulty
+      crossword[i] = list(word)
+
+  return crossword
+
+def crossword_generator_medium():
+  crossword = [[],[],[],[],[],[],[],[],[],[]]
+  global characters
+  global words
+  global down
+
+  for i in range(4):
+    word = ''
+    word_d = down[i]
+    arg = False
+
+
+    while arg == False:
+      cout = 0
+      while cout < 7 and arg == False:
+        word = word_d[cout]
+        crossword[cout] += list(word)
+        cout += 1
+
+        if cout == 7:
+          arg = True
+
+  for n in range (10):
+    word = ''
+    placement = random.randint(0,3)
+    dis_word = crossword[n]
+    cout = 0
+
+    if n <= 6:
+      if placement == 0:
+        for j in range(len(dis_word)):
+           word += dis_word[j]
+
+           
+        word += words[n]
+        
+        cout = len(word)
+
+        while cout < 10:
+           word += characters[random.randint(0,10)]
+           cout += 1
+
+      elif placement == 1:
+        for j in range(len(dis_word)):
+          word += dis_word[j]
+
+      
+        word += words[n]
+        
+        cout = len(word)
+
+        while cout < 10:
+          word += characters[random.randint(0,10)]
+          cout += 1
+
+      elif placement == 2:
+        for j in range(len(dis_word)):
+          word += dis_word[j]
+
+        word += words[n]
+        
+        cout = len(word)
+
+        while cout < 10:
+          word += characters[random.randint(0,10)]
+          cout += 1
+
+      elif placement == 3:
+        for j in range(len(dis_word)):
+          word += dis_word[j]
+
+        word += words[n]
+
+        cout = len(word)
+
+
+        while cout < 10:
+          word += characters[random.randint(0,10)]
+          cout += 1
+    
+    else:
+
+      num = len(words[n])
+      for m in range(0,(10-num)):
+        word += characters[m]
+        if m == 2:
+           word += words[n]
+
+
+    crossword[n] = list(word)
+
+  return crossword
+
+
+
+# list containing words to be implemented in the crossword
+words = ['ant', 'trial', 'job', 'home', 'newton', 'taxes', 'google', 'world', 'snack', 'ball']
+down = ['beanbag', 'scrabbl', 'pizzazz', 'zigzags']
+
+# this list contains a random arrangement of characters to be joined to the crossword output
+characters = ['a','e','q','s','b','r','l','t','c','o','m']
+
+puzzel = crossword_generator_medium()
+
+for t in range(10):
+  print(puzzel[t])
+
+

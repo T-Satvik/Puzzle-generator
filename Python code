@@ -45,6 +45,9 @@ def crossword_generator_medium():
   global words
   global down
 
+  """
+  The below loop places the list of down words as place holders for the crossword.
+  """
   for i in range(4):
     word = ''
     word_d = down[i]
@@ -61,13 +64,23 @@ def crossword_generator_medium():
         if cout == 7:
           arg = True
 
+  """
+  The below loop is for the horizontal placement of the words.
+  """
+
   for n in range (10):
     word = ''
-    placement = random.randint(0,3)
+    placement = random.randint(0,2)
     dis_word = crossword[n]
     cout = 0
+    cout_1 = 0
 
+    """
+       Because we have placed the down words as place holders we can use a simple trick to first place the already present characters and then perform similar loop orders from easy mode
+       Where we can place a few characters and then words while some could be after or both in between
+    """
     if n <= 6:
+      # this if part places the word from the words list after the place holders are placed and if remaining space is available then they use spare characters.
       if placement == 0:
         for j in range(len(dis_word)):
            word += dis_word[j]
@@ -80,44 +93,36 @@ def crossword_generator_medium():
         while cout < 10:
            word += characters[random.randint(0,10)]
            cout += 1
+      
 
+      # this part places the word from words after the characters are placed to ensure the 10*10 grid we also require length of words[n].
       elif placement == 1:
         for j in range(len(dis_word)):
           word += dis_word[j]
 
-      
-        word += words[n]
-        
+        cout_1 = len(words[n])
         cout = len(word)
 
-        while cout < 10:
+        while cout < 10-cout_1:
           word += characters[random.randint(0,10)]
           cout += 1
-
+        
+        word += words[n]
+      
+      # this part ensures that there few characters before and after
       elif placement == 2:
         for j in range(len(dis_word)):
-          word += dis_word[j]
+           word += dis_word[j]
 
+        free_space = 10 - len(dis_word) - len(words[n])
+        # choose how many fillers go before inserting the word
+        left_fill = random.randint(0, free_space)
+        right_fill = free_space - left_fill
+
+        word += ''.join(random.choice(characters) for _ in range(left_fill))
         word += words[n]
-        
-        cout = len(word)
+        word += ''.join(random.choice(characters) for _ in range(right_fill))
 
-        while cout < 10:
-          word += characters[random.randint(0,10)]
-          cout += 1
-
-      elif placement == 3:
-        for j in range(len(dis_word)):
-          word += dis_word[j]
-
-        word += words[n]
-
-        cout = len(word)
-
-
-        while cout < 10:
-          word += characters[random.randint(0,10)]
-          cout += 1
     
     else:
 
@@ -138,12 +143,55 @@ def crossword_generator_medium():
 words = ['ant', 'trial', 'job', 'home', 'newton', 'taxes', 'google', 'world', 'snack', 'ball']
 down = ['beanbag', 'scrabbl', 'pizzazz', 'zigzags']
 
+# below list is used for the score tracker
+words_to_be_checked_easy = ['ant', 'trial', 'job', 'home', 'newton', 'taxes', 'google', 'world', 'snack', 'ball']
+words_to_be_checked_medium = ['ant', 'trial', 'job', 'home', 'newton', 'taxes', 'google', 'world', 'snack', 'ball','beanbag', 'scrabbl', 'pizzazz', 'zigzags']
+
 # this list contains a random arrangement of characters to be joined to the crossword output
 characters = ['a','e','q','s','b','r','l','t','c','o','m']
 
-puzzel = crossword_generator_medium()
+difficulty = input("Easy or medium mode: ")
+
+if difficulty == 'easy':
+  puzzel = crossword_generator_easy()
+elif difficulty == 'medium':
+  puzzel = crossword_generator_medium()
 
 for t in range(10):
   print(puzzel[t])
+
+score = 0
+answers = ''
+exit = False 
+response = ''
+
+"""
+The below code is simple score tracker 
+"""
+while exit == False and (difficulty == 'easy' or difficulty == 'medium')::
+  answers = input("Enter your answer, also no order required: ")
+  
+  if difficulty == 'easy':
+
+    if answers.lower() in words_to_be_checked_easy:
+      score += 1
+      words_to_be_checked_easy.remove(answers.lower())
+
+  elif difficulty == 'medium':
+
+    if answers.lower() in words_to_be_checked_medium:
+      score += 1
+      words_to_be_checked_medium.remove(answers.lower())
+
+  response = input("Do you want to contineu, y or n: ")
+
+  if (score == 10 and difficulty == 'easy') or response == 'n':
+    exit = True
+
+  elif (score == 14 and difficulty == 'medium') or response == 'n':
+    exit = True
+
+
+print(score)
 
 
